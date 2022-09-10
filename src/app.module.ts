@@ -3,10 +3,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContactInfo } from './entity/contact-info.entity';
+import { Employee } from './entity/employee.entity';
+import { Meeting } from './entity/meeting.entity';
+import { Task } from './entity/task.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forFeature([ContactInfo, Employee, Meeting, Task]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -17,7 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: ['src/entity/**/*.js'],
+        entities: ['dist/entity/**/*.entity.js'],
         synchronize: true,
         autoLoadEntities: true,
       }),
