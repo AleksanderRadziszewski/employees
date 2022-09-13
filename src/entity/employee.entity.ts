@@ -33,7 +33,7 @@ export class Employee {
   })
   contactInfo: ContactInfo;
 
-  @OneToMany(() => Task, (task) => task.employee)
+  @OneToMany(() => Task, (task) => task.employee, { cascade: true })
   tasks: Task[];
 
   @ManyToMany(() => Meeting, (meeting) => meeting.attendees)

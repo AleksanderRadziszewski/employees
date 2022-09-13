@@ -35,9 +35,7 @@ export class AppService {
     });
 
     const task1 = this.taskRepo.create({ name: 'Hire people' });
-    await this.taskRepo.save(task1);
     const task2 = this.taskRepo.create({ name: 'Present to CEO' });
-    await this.taskRepo.save(task2);
 
     manager.tasks = [task1, task2];
 
@@ -49,7 +47,16 @@ export class AppService {
     await this.employeeRepo.save(manager);
   }
 
-  getHello(): string {
-    return 'Hello World!';
+  async getEmployeeById(employeeId: number) {
+    return this.employeeRepo
+      .createQueryBuilder('employee')
+      .leftJoinAndSelect('employee.directReports', 'directReports')
+      .leftJoinAndSelect('employee.meetings', 'meetings')
+      .leftJoinAndSelect('employee.tasks', 'tasks')
+      .where('employee.id = :employeeId', { employeeId })
+      .getOne();
+  }
+  async deleteEmployeeById(employeeId: number): Promise<any> {
+    return this.employeeRepo.delete(employeeId);
   }
 }
